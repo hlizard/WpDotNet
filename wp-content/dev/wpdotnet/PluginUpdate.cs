@@ -6,6 +6,7 @@ using System.Text;
 using PHP.Core;
 using System.Web;
 using System.IO;
+using System.Diagnostics;
 
 namespace Devsense.WordPress.Plugins.WpDotNet
 {
@@ -65,7 +66,7 @@ namespace Devsense.WordPress.Plugins.WpDotNet
                 catch
                 {
                     // TODO: die('Update wp-content\mu-plugins permission'); // ?
-                    Debug.Fail();
+                    Debug.Fail("");
                 }
             }
 

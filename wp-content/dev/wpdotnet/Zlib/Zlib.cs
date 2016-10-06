@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.IO.Compression;
 using PHP.Core;
+using System.Diagnostics;
 
 namespace Devsense.WordPress.Plugins.WpDotNet.Zlib
 {
@@ -73,7 +74,7 @@ namespace Devsense.WordPress.Plugins.WpDotNet.Zlib
         /// </summary>
         private static void DeclareFunction(ScriptContext/*!*/context, string name, RoutineDelegate func)
         {
-            context.DeclaredFunctions.Add(name, new PHP.Core.Reflection.PhpRoutineDesc(PHP.Core.Reflection.PhpMemberAttributes.Public | PHP.Core.Reflection.PhpMemberAttributes.Static, func, false));
+            context.DeclaredFunctions.Add(name, new PHP.Core.Reflection.PhpRoutineDesc(PHP.Core.PhpMemberAttributes.Public | PHP.Core.PhpMemberAttributes.Static, func, false));
         }
 
         private static object NotSupportedFunction(object instance, PhpStack/*!*/stack)
