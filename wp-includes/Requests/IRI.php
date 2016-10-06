@@ -83,7 +83,7 @@ class Requests_IRI {
 	 *
 	 * @var string
 	 */
-	protected $ihost = null;
+	public $ihost = null;
 
 	/**
 	 * Port
