@@ -15,7 +15,7 @@ System Recommandation:
 
 IIS Instalation recommandation:
  - run permissions.bat - sets permission for IIS_IUSRS for this folder and all subfolders
- - run iis_setup.bat - sets "Phalanger v3.0" apppool in your IIS and asociate localhost/wordpress url with this wp installation
+ - run iis_setup.bat - sets "Phalanger v4.0" apppool in your IIS and asociate localhost/wordpress url with this wp installation
  - just access localhost/wordpress and folow traditional 5-minut installation of WordPress
 
 
