@@ -1,1 +1,774 @@
-var wpLink;(function(f){var b={},e={},d,a,c;wpLink={timeToTriggerRiver:150,minRiverAJAXDuration:200,riverBottomThreshold:5,keySensitivity:100,lastSearch:"",textarea:"",init:function(){b.dialog=f("#wp-link");b.submit=f("#wp-link-submit");b.url=f("#url-field");b.nonce=f("#_ajax_linking_nonce");b.title=f("#link-title-field");b.openInNewTab=f("#link-target-checkbox");b.search=f("#search-field");e.search=new a(f("#search-results"));e.recent=new a(f("#most-recent-results"));e.elements=f(".query-results",b.dialog);b.dialog.keydown(wpLink.keydown);b.dialog.keyup(wpLink.keyup);b.submit.click(function(g){g.preventDefault();wpLink.update()});f("#wp-link-cancel").click(function(g){g.preventDefault();wpLink.close()});f("#internal-toggle").click(wpLink.toggleInternalLinking);e.elements.bind("river-select",wpLink.updateFields);b.search.keyup(wpLink.searchInternalLinks);b.dialog.bind("wpdialogrefresh",wpLink.refresh);b.dialog.bind("wpdialogbeforeopen",wpLink.beforeOpen);b.dialog.bind("wpdialogclose",wpLink.onClose)},beforeOpen:function(){wpLink.range=null;if(!wpLink.isMCE()&&document.selection){wpLink.textarea.focus();wpLink.range=document.selection.createRange()}},open:function(){if(!wpActiveEditor){return}this.textarea=f("#"+wpActiveEditor).get(0);if(!b.dialog.data("wpdialog")){b.dialog.wpdialog({title:wpLinkL10n.title,width:480,height:"auto",modal:true,dialogClass:"wp-dialog",zIndex:300000})}b.dialog.wpdialog("open")},isMCE:function(){return tinyMCEPopup&&(d=tinyMCEPopup.editor)&&!d.isHidden()},refresh:function(){e.search.refresh();e.recent.refresh();if(wpLink.isMCE()){wpLink.mceRefresh()}else{wpLink.setDefaultValues()}b.url.focus()[0].select();if(!e.recent.ul.children().length){e.recent.ajax()}},mceRefresh:function(){var g;d=tinyMCEPopup.editor;tinyMCEPopup.restoreSelection();if(g=d.dom.getParent(d.selection.getNode(),"A")){b.url.val(d.dom.getAttrib(g,"href"));b.title.val(d.dom.getAttrib(g,"title"));if("_blank"==d.dom.getAttrib(g,"target")){b.openInNewTab.prop("checked",true)}b.submit.val(wpLinkL10n.update)}else{wpLink.setDefaultValues()}tinyMCEPopup.storeSelection()},close:function(){if(wpLink.isMCE()){tinyMCEPopup.close()}else{b.dialog.wpdialog("close")}},onClose:function(){if(!wpLink.isMCE()){wpLink.textarea.focus();if(wpLink.range){wpLink.range.moveToBookmark(wpLink.range.getBookmark());wpLink.range.select()}}},getAttrs:function(){return{href:b.url.val(),title:b.title.val(),target:b.openInNewTab.prop("checked")?"_blank":""}},update:function(){if(wpLink.isMCE()){wpLink.mceUpdate()}else{wpLink.htmlUpdate()}},htmlUpdate:function(){var i,j,l,h,k,g=wpLink.textarea;if(!g){return}i=wpLink.getAttrs();if(!i.href||i.href=="http://"){return}j='<a href="'+i.href+'"';if(i.title){j+=' title="'+i.title+'"'}if(i.target){j+=' target="'+i.target+'"'}j+=">";if(typeof g.selectionStart!=="undefined"){l=g.selectionStart;h=g.selectionEnd;selection=g.value.substring(l,h);j=j+selection+"</a>";k=l+j.length;if(l==h){k-="</a>".length}g.value=g.value.substring(0,l)+j+g.value.substring(h,g.value.length);g.selectionStart=g.selectionEnd=k}else{if(document.selection&&wpLink.range){g.focus();wpLink.range.text=j+wpLink.range.text+"</a>";wpLink.range.moveToBookmark(wpLink.range.getBookmark());wpLink.range.select();wpLink.range=null}}wpLink.close();g.focus()},mceUpdate:function(){var h=tinyMCEPopup.editor,i=wpLink.getAttrs(),j,g;tinyMCEPopup.restoreSelection();j=h.dom.getParent(h.selection.getNode(),"A");if(!i.href||i.href=="http://"){if(j){tinyMCEPopup.execCommand("mceBeginUndoLevel");g=h.selection.getBookmark();h.dom.remove(j,1);h.selection.moveToBookmark(g);tinyMCEPopup.execCommand("mceEndUndoLevel");wpLink.close()}return}tinyMCEPopup.execCommand("mceBeginUndoLevel");if(j==null){h.getDoc().execCommand("unlink",false,null);tinyMCEPopup.execCommand("CreateLink",false,"#mce_temp_url#",{skip_undo:1});tinymce.each(h.dom.select("a"),function(k){if(h.dom.getAttrib(k,"href")=="#mce_temp_url#"){j=k;h.dom.setAttribs(j,i)}});if(f(j).text()=="#mce_temp_url#"){h.dom.remove(j);j=null}}else{h.dom.setAttribs(j,i)}if(j&&(j.childNodes.length!=1||j.firstChild.nodeName!="IMG")){h.focus();h.selection.select(j);h.selection.collapse(0);tinyMCEPopup.storeSelection()}tinyMCEPopup.execCommand("mceEndUndoLevel");wpLink.close()},updateFields:function(i,h,g){b.url.val(h.children(".item-permalink").val());b.title.val(h.hasClass("no-title")?"":h.children(".item-title").text());if(g&&g.type=="click"){b.url.focus()}},setDefaultValues:function(){b.url.val("http://");b.title.val("");b.submit.val(wpLinkL10n.save)},searchInternalLinks:function(){var h=f(this),i,g=h.val();if(g.length>2){e.recent.hide();e.search.show();if(wpLink.lastSearch==g){return}wpLink.lastSearch=g;i=h.siblings("img.waiting").show();e.search.change(g);e.search.ajax(function(){i.hide()})}else{e.search.hide();e.recent.show()}},next:function(){e.search.next();e.recent.next()},prev:function(){e.search.prev();e.recent.prev()},keydown:function(i){var h,g=f.ui.keyCode;switch(i.which){case g.UP:h="prev";case g.DOWN:h=h||"next";clearInterval(wpLink.keyInterval);wpLink[h]();wpLink.keyInterval=setInterval(wpLink[h],wpLink.keySensitivity);break;default:return}i.preventDefault()},keyup:function(h){var g=f.ui.keyCode;switch(h.which){case g.ESCAPE:h.stopImmediatePropagation();if(!f(document).triggerHandler("wp_CloseOnEscape",[{event:h,what:"wplink",cb:wpLink.close}])){wpLink.close()}return false;break;case g.UP:case g.DOWN:clearInterval(wpLink.keyInterval);break;default:return}h.preventDefault()},delayedCallback:function(i,g){var l,k,j,h;if(!g){return i}setTimeout(function(){if(k){return i.apply(h,j)}l=true},g);return function(){if(l){return i.apply(this,arguments)}j=arguments;h=this;k=true}},toggleInternalLinking:function(h){var g=f("#search-panel"),i=b.dialog.wpdialog("widget"),k=!g.is(":visible"),j=f(window);f(this).toggleClass("toggle-arrow-active",k);b.dialog.height("auto");g.slideToggle(300,function(){setUserSetting("wplink",k?"1":"0");b[k?"search":"url"].focus();var l=j.scrollTop(),o=i.offset().top,m=o+i.outerHeight(),n=m-j.height();if(n>l){i.animate({top:n<o?o-n:l},200)}});h.preventDefault()}};a=function(i,h){var g=this;this.element=i;this.ul=i.children("ul");this.waiting=i.find(".river-waiting");this.change(h);this.refresh();i.scroll(function(){g.maybeLoad()});i.delegate("li","click",function(j){g.select(f(this),j)})};f.extend(a.prototype,{refresh:function(){this.deselect();this.visible=this.element.is(":visible")},show:function(){if(!this.visible){this.deselect();this.element.show();this.visible=true}},hide:function(){this.element.hide();this.visible=false},select:function(h,k){var j,i,l,g;if(h.hasClass("unselectable")||h==this.selected){return}this.deselect();this.selected=h.addClass("selected");j=h.outerHeight();i=this.element.height();l=h.position().top;g=this.element.scrollTop();if(l<0){this.element.scrollTop(g+l)}else{if(l+j>i){this.element.scrollTop(g+l-i+j)}}this.element.trigger("river-select",[h,k,this])},deselect:function(){if(this.selected){this.selected.removeClass("selected")}this.selected=false},prev:function(){if(!this.visible){return}var g;if(this.selected){g=this.selected.prev("li");if(g.length){this.select(g)}}},next:function(){if(!this.visible){return}var g=this.selected?this.selected.next("li"):f("li:not(.unselectable):first",this.element);if(g.length){this.select(g)}},ajax:function(j){var h=this,i=this.query.page==1?0:wpLink.minRiverAJAXDuration,g=wpLink.delayedCallback(function(k,l){h.process(k,l);if(j){j(k,l)}},i);this.query.ajax(g)},change:function(g){if(this.query&&this._search==g){return}this._search=g;this.query=new c(g);this.element.scrollTop(0)},process:function(h,l){var i="",j=true,g="",k=l.page==1;if(!h){if(k){i+='<li class="unselectable"><span class="item-title"><em>'+wpLinkL10n.noMatchesFound+"</em></span></li>"}}else{f.each(h,function(){g=j?"alternate":"";g+=this["title"]?"":" no-title";i+=g?'<li class="'+g+'">':"<li>";i+='<input type="hidden" class="item-permalink" value="'+this["permalink"]+'" />';i+='<span class="item-title">';i+=this["title"]?this["title"]:wpLinkL10n.noTitle;i+='</span><span class="item-info">'+this["info"]+"</span></li>";j=!j})}this.ul[k?"html":"append"](i)},maybeLoad:function(){var h=this,i=this.element,g=i.scrollTop()+i.height();if(!this.query.ready()||g<this.ul.height()-wpLink.riverBottomThreshold){return}setTimeout(function(){var j=i.scrollTop(),k=j+i.height();if(!h.query.ready()||k<h.ul.height()-wpLink.riverBottomThreshold){return}h.waiting.show();i.scrollTop(j+h.waiting.outerHeight());h.ajax(function(){h.waiting.hide()})},wpLink.timeToTriggerRiver)}});c=function(g){this.page=1;this.allLoaded=false;this.querying=false;this.search=g};f.extend(c.prototype,{ready:function(){return !(this.querying||this.allLoaded)},ajax:function(i){var g=this,h={action:"wp-link-ajax",page:this.page,_ajax_linking_nonce:b.nonce.val()};if(this.search){h.search=this.search}this.querying=true;f.post(ajaxurl,h,function(j){g.page++;g.querying=false;g.allLoaded=!j;i(j,h)},"json")}});f(document).ready(wpLink.init)})(jQuery);
+var wpLink;
+
+( function( $, wpLinkL10n, wp ) {
+	var editor, searchTimer, River, Query, correctedURL, linkNode,
+		emailRegexp = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,63}$/i,
+		urlRegexp = /^(https?|ftp):\/\/[A-Z0-9.-]+\.[A-Z]{2,63}[^ "]*$/i,
+		inputs = {},
+		rivers = {},
+		isTouch = ( 'ontouchend' in document );
+
+	function getLink() {
+		return linkNode || editor.dom.getParent( editor.selection.getNode(), 'a[href]' );
+	}
+
+	wpLink = {
+		timeToTriggerRiver: 150,
+		minRiverAJAXDuration: 200,
+		riverBottomThreshold: 5,
+		keySensitivity: 100,
+		lastSearch: '',
+		textarea: '',
+		modalOpen: false,
+
+		init: function() {
+			inputs.wrap = $('#wp-link-wrap');
+			inputs.dialog = $( '#wp-link' );
+			inputs.backdrop = $( '#wp-link-backdrop' );
+			inputs.submit = $( '#wp-link-submit' );
+			inputs.close = $( '#wp-link-close' );
+
+			// Input
+			inputs.text = $( '#wp-link-text' );
+			inputs.url = $( '#wp-link-url' );
+			inputs.nonce = $( '#_ajax_linking_nonce' );
+			inputs.openInNewTab = $( '#wp-link-target' );
+			inputs.search = $( '#wp-link-search' );
+
+			// Build Rivers
+			rivers.search = new River( $( '#search-results' ) );
+			rivers.recent = new River( $( '#most-recent-results' ) );
+			rivers.elements = inputs.dialog.find( '.query-results' );
+
+			// Get search notice text
+			inputs.queryNotice = $( '#query-notice-message' );
+			inputs.queryNoticeTextDefault = inputs.queryNotice.find( '.query-notice-default' );
+			inputs.queryNoticeTextHint = inputs.queryNotice.find( '.query-notice-hint' );
+
+			// Bind event handlers
+			inputs.dialog.keydown( wpLink.keydown );
+			inputs.dialog.keyup( wpLink.keyup );
+			inputs.submit.click( function( event ) {
+				event.preventDefault();
+				wpLink.update();
+			});
+
+			inputs.close.add( inputs.backdrop ).add( '#wp-link-cancel button' ).click( function( event ) {
+				event.preventDefault();
+				wpLink.close();
+			});
+
+			rivers.elements.on( 'river-select', wpLink.updateFields );
+
+			// Display 'hint' message when search field or 'query-results' box are focused
+			inputs.search.on( 'focus.wplink', function() {
+				inputs.queryNoticeTextDefault.hide();
+				inputs.queryNoticeTextHint.removeClass( 'screen-reader-text' ).show();
+			} ).on( 'blur.wplink', function() {
+				inputs.queryNoticeTextDefault.show();
+				inputs.queryNoticeTextHint.addClass( 'screen-reader-text' ).hide();
+			} );
+
+			inputs.search.on( 'keyup input', function() {
+				window.clearTimeout( searchTimer );
+				searchTimer = window.setTimeout( function() {
+					wpLink.searchInternalLinks();
+				}, 500 );
+			});
+
+			inputs.url.on( 'paste', function() {
+				setTimeout( wpLink.correctURL, 0 );
+			} );
+
+			inputs.url.on( 'blur', wpLink.correctURL );
+		},
+
+		// If URL wasn't corrected last time and doesn't start with http:, https:, ? # or /, prepend http://
+		correctURL: function () {
+			var url = $.trim( inputs.url.val() );
+
+			if ( url && correctedURL !== url && ! /^(?:[a-z]+:|#|\?|\.|\/)/.test( url ) ) {
+				inputs.url.val( 'http://' + url );
+				correctedURL = url;
+			}
+		},
+
+		open: function( editorId, url, text, node ) {
+			var ed,
+				$body = $( document.body );
+
+			$body.addClass( 'modal-open' );
+			wpLink.modalOpen = true;
+			linkNode = node;
+
+			wpLink.range = null;
+
+			if ( editorId ) {
+				window.wpActiveEditor = editorId;
+			}
+
+			if ( ! window.wpActiveEditor ) {
+				return;
+			}
+
+			this.textarea = $( '#' + window.wpActiveEditor ).get( 0 );
+
+			if ( typeof window.tinymce !== 'undefined' ) {
+				// Make sure the link wrapper is the last element in the body,
+				// or the inline editor toolbar may show above the backdrop.
+				$body.append( inputs.backdrop, inputs.wrap );
+
+				ed = window.tinymce.get( window.wpActiveEditor );
+
+				if ( ed && ! ed.isHidden() ) {
+					editor = ed;
+				} else {
+					editor = null;
+				}
+
+				if ( editor && window.tinymce.isIE ) {
+					editor.windowManager.wplinkBookmark = editor.selection.getBookmark();
+				}
+			}
+
+			if ( ! wpLink.isMCE() && document.selection ) {
+				this.textarea.focus();
+				this.range = document.selection.createRange();
+			}
+
+			inputs.wrap.show();
+			inputs.backdrop.show();
+
+			wpLink.refresh( url, text );
+
+			$( document ).trigger( 'wplink-open', inputs.wrap );
+		},
+
+		isMCE: function() {
+			return editor && ! editor.isHidden();
+		},
+
+		refresh: function( url, text ) {
+			var linkText = '';
+
+			// Refresh rivers (clear links, check visibility)
+			rivers.search.refresh();
+			rivers.recent.refresh();
+
+			if ( wpLink.isMCE() ) {
+				wpLink.mceRefresh( url, text );
+			} else {
+				// For the Text editor the "Link text" field is always shown
+				if ( ! inputs.wrap.hasClass( 'has-text-field' ) ) {
+					inputs.wrap.addClass( 'has-text-field' );
+				}
+
+				if ( document.selection ) {
+					// Old IE
+					linkText = document.selection.createRange().text || text || '';
+				} else if ( typeof this.textarea.selectionStart !== 'undefined' &&
+					( this.textarea.selectionStart !== this.textarea.selectionEnd ) ) {
+					// W3C
+					text = this.textarea.value.substring( this.textarea.selectionStart, this.textarea.selectionEnd ) || text || '';
+				}
+
+				inputs.text.val( text );
+				wpLink.setDefaultValues();
+			}
+
+			if ( isTouch ) {
+				// Close the onscreen keyboard
+				inputs.url.focus().blur();
+			} else {
+				// Focus the URL field and highlight its contents.
+				// If this is moved above the selection changes,
+				// IE will show a flashing cursor over the dialog.
+				window.setTimeout( function() {
+					inputs.url[0].select();
+					inputs.url.focus();
+				} );
+			}
+
+			// Load the most recent results if this is the first time opening the panel.
+			if ( ! rivers.recent.ul.children().length ) {
+				rivers.recent.ajax();
+			}
+
+			correctedURL = inputs.url.val().replace( /^http:\/\//, '' );
+		},
+
+		hasSelectedText: function( linkNode ) {
+			var node, nodes, i, html = editor.selection.getContent();
+
+			// Partial html and not a fully selected anchor element
+			if ( /</.test( html ) && ( ! /^<a [^>]+>[^<]+<\/a>$/.test( html ) || html.indexOf('href=') === -1 ) ) {
+				return false;
+			}
+
+			if ( linkNode ) {
+				nodes = linkNode.childNodes;
+
+				if ( nodes.length === 0 ) {
+					return false;
+				}
+
+				for ( i = nodes.length - 1; i >= 0; i-- ) {
+					node = nodes[i];
+
+					if ( node.nodeType != 3 && ! window.tinymce.dom.BookmarkManager.isBookmarkNode( node ) ) {
+						return false;
+					}
+				}
+			}
+
+			return true;
+		},
+
+		mceRefresh: function( searchStr, text ) {
+			var linkText, href,
+				linkNode = getLink(),
+				onlyText = this.hasSelectedText( linkNode );
+
+			if ( linkNode ) {
+				linkText = linkNode.textContent || linkNode.innerText;
+				href = editor.dom.getAttrib( linkNode, 'href' );
+
+				if ( ! $.trim( linkText ) ) {
+					linkText = text || '';
+				}
+
+				if ( searchStr && ( urlRegexp.test( searchStr ) || emailRegexp.test( searchStr ) ) ) {
+					href = searchStr;
+				}
+
+				if ( href !== '_wp_link_placeholder' ) {
+					inputs.url.val( href );
+					inputs.openInNewTab.prop( 'checked', '_blank' === editor.dom.getAttrib( linkNode, 'target' ) );
+					inputs.submit.val( wpLinkL10n.update );
+				} else {
+					this.setDefaultValues( linkText );
+				}
+
+				if ( searchStr && searchStr !== href ) {
+					// The user has typed something in the inline dialog. Trigger a search with it.
+					inputs.search.val( searchStr );
+				} else {
+					inputs.search.val( '' );
+				}
+
+				// Always reset the search
+				window.setTimeout( function() {
+					wpLink.searchInternalLinks();
+				} );
+			} else {
+				linkText = editor.selection.getContent({ format: 'text' }) || text || '';
+				this.setDefaultValues( linkText );
+			}
+
+			if ( onlyText ) {
+				inputs.text.val( linkText );
+				inputs.wrap.addClass( 'has-text-field' );
+			} else {
+				inputs.text.val( '' );
+				inputs.wrap.removeClass( 'has-text-field' );
+			}
+		},
+
+		close: function( reset ) {
+			$( document.body ).removeClass( 'modal-open' );
+			wpLink.modalOpen = false;
+
+			if ( reset !== 'noReset' ) {
+				if ( ! wpLink.isMCE() ) {
+					wpLink.textarea.focus();
+
+					if ( wpLink.range ) {
+						wpLink.range.moveToBookmark( wpLink.range.getBookmark() );
+						wpLink.range.select();
+					}
+				} else {
+					if ( editor.plugins.wplink ) {
+						editor.plugins.wplink.close();
+					}
+
+					editor.focus();
+				}
+			}
+
+			inputs.backdrop.hide();
+			inputs.wrap.hide();
+
+			correctedURL = false;
+
+			$( document ).trigger( 'wplink-close', inputs.wrap );
+		},
+
+		getAttrs: function() {
+			wpLink.correctURL();
+
+			return {
+				href: $.trim( inputs.url.val() ),
+				target: inputs.openInNewTab.prop( 'checked' ) ? '_blank' : ''
+			};
+		},
+
+		buildHtml: function(attrs) {
+			var html = '<a href="' + attrs.href + '"';
+
+			if ( attrs.target ) {
+				html += ' target="' + attrs.target + '"';
+			}
+
+			return html + '>';
+		},
+
+		update: function() {
+			if ( wpLink.isMCE() ) {
+				wpLink.mceUpdate();
+			} else {
+				wpLink.htmlUpdate();
+			}
+		},
+
+		htmlUpdate: function() {
+			var attrs, text, html, begin, end, cursor, selection,
+				textarea = wpLink.textarea;
+
+			if ( ! textarea ) {
+				return;
+			}
+
+			attrs = wpLink.getAttrs();
+			text = inputs.text.val();
+
+			// If there's no href, return.
+			if ( ! attrs.href ) {
+				return;
+			}
+
+			html = wpLink.buildHtml(attrs);
+
+			// Insert HTML
+			if ( document.selection && wpLink.range ) {
+				// IE
+				// Note: If no text is selected, IE will not place the cursor
+				//       inside the closing tag.
+				textarea.focus();
+				wpLink.range.text = html + ( text || wpLink.range.text ) + '</a>';
+				wpLink.range.moveToBookmark( wpLink.range.getBookmark() );
+				wpLink.range.select();
+
+				wpLink.range = null;
+			} else if ( typeof textarea.selectionStart !== 'undefined' ) {
+				// W3C
+				begin = textarea.selectionStart;
+				end = textarea.selectionEnd;
+				selection = text || textarea.value.substring( begin, end );
+				html = html + selection + '</a>';
+				cursor = begin + html.length;
+
+				// If no text is selected, place the cursor inside the closing tag.
+				if ( begin === end && ! selection ) {
+					cursor -= 4;
+				}
+
+				textarea.value = (
+					textarea.value.substring( 0, begin ) +
+					html +
+					textarea.value.substring( end, textarea.value.length )
+				);
+
+				// Update cursor position
+				textarea.selectionStart = textarea.selectionEnd = cursor;
+			}
+
+			wpLink.close();
+			textarea.focus();
+
+			// Audible confirmation message when a link has been inserted in the Editor.
+			wp.a11y.speak( wpLinkL10n.linkInserted );
+		},
+
+		mceUpdate: function() {
+			var attrs = wpLink.getAttrs(),
+				link, text;
+
+			if ( window.tinymce.isIE && editor.windowManager.wplinkBookmark ) {
+				editor.selection.moveToBookmark( editor.windowManager.wplinkBookmark );
+				editor.windowManager.wplinkBookmark = null;
+			}
+
+			if ( ! attrs.href ) {
+				editor.execCommand( 'unlink' );
+				wpLink.close();
+				return;
+			}
+
+			link = getLink();
+
+			if ( inputs.wrap.hasClass( 'has-text-field' ) ) {
+				text = inputs.text.val() || attrs.href;
+			}
+
+			if ( link ) {
+				if ( text ) {
+					if ( 'innerText' in link ) {
+						link.innerText = text;
+					} else {
+						link.textContent = text;
+					}
+				}
+
+				// Not editing any more
+				attrs['data-wplink-edit'] = null;
+				editor.dom.setAttribs( link, attrs );
+			} else {
+				if ( text ) {
+					editor.selection.setNode( editor.dom.create( 'a', attrs, editor.dom.encode( text ) ) );
+				} else {
+					editor.execCommand( 'mceInsertLink', false, attrs );
+				}
+			}
+
+			wpLink.close( 'noReset' );
+			editor.focus();
+			editor.nodeChanged();
+
+			if ( link && editor.plugins.wplink ) {
+				editor.plugins.wplink.checkLink( link );
+			}
+
+			// Audible confirmation message when a link has been inserted in the Editor.
+			wp.a11y.speak( wpLinkL10n.linkInserted );
+		},
+
+		updateFields: function( e, li ) {
+			inputs.url.val( li.children( '.item-permalink' ).val() );
+		},
+
+		getUrlFromSelection: function( selection ) {
+			if ( ! selection ) {
+				if ( this.isMCE() ) {
+					selection = editor.selection.getContent({ format: 'text' });
+				} else if ( document.selection && wpLink.range ) {
+					selection = wpLink.range.text;
+				} else if ( typeof this.textarea.selectionStart !== 'undefined' ) {
+					selection = this.textarea.value.substring( this.textarea.selectionStart, this.textarea.selectionEnd );
+				}
+			}
+
+			selection = $.trim( selection );
+
+			if ( selection && emailRegexp.test( selection ) ) {
+				// Selection is email address
+				return 'mailto:' + selection;
+			} else if ( selection && urlRegexp.test( selection ) ) {
+				// Selection is URL
+				return selection.replace( /&amp;|&#0?38;/gi, '&' );
+			}
+
+			return '';
+		},
+
+		setDefaultValues: function( selection ) {
+			inputs.url.val( this.getUrlFromSelection( selection ) );
+
+			// Empty the search field and swap the "rivers".
+			inputs.search.val('');
+			wpLink.searchInternalLinks();
+
+			// Update save prompt.
+			inputs.submit.val( wpLinkL10n.save );
+		},
+
+		searchInternalLinks: function() {
+			var waiting,
+				search = inputs.search.val() || '';
+
+			if ( search.length > 2 ) {
+				rivers.recent.hide();
+				rivers.search.show();
+
+				// Don't search if the keypress didn't change the title.
+				if ( wpLink.lastSearch == search )
+					return;
+
+				wpLink.lastSearch = search;
+				waiting = inputs.search.parent().find( '.spinner' ).addClass( 'is-active' );
+
+				rivers.search.change( search );
+				rivers.search.ajax( function() {
+					waiting.removeClass( 'is-active' );
+				});
+			} else {
+				rivers.search.hide();
+				rivers.recent.show();
+			}
+		},
+
+		next: function() {
+			rivers.search.next();
+			rivers.recent.next();
+		},
+
+		prev: function() {
+			rivers.search.prev();
+			rivers.recent.prev();
+		},
+
+		keydown: function( event ) {
+			var fn, id;
+
+			// Escape key.
+			if ( 27 === event.keyCode ) {
+				wpLink.close();
+				event.stopImmediatePropagation();
+			// Tab key.
+			} else if ( 9 === event.keyCode ) {
+				id = event.target.id;
+
+				// wp-link-submit must always be the last focusable element in the dialog.
+				// following focusable elements will be skipped on keyboard navigation.
+				if ( id === 'wp-link-submit' && ! event.shiftKey ) {
+					inputs.close.focus();
+					event.preventDefault();
+				} else if ( id === 'wp-link-close' && event.shiftKey ) {
+					inputs.submit.focus();
+					event.preventDefault();
+				}
+			}
+
+			// Up Arrow and Down Arrow keys.
+			if ( 38 !== event.keyCode && 40 !== event.keyCode ) {
+				return;
+			}
+
+			if ( document.activeElement &&
+				( document.activeElement.id === 'link-title-field' || document.activeElement.id === 'url-field' ) ) {
+				return;
+			}
+
+			// Up Arrow key.
+			fn = 38 === event.keyCode ? 'prev' : 'next';
+			clearInterval( wpLink.keyInterval );
+			wpLink[ fn ]();
+			wpLink.keyInterval = setInterval( wpLink[ fn ], wpLink.keySensitivity );
+			event.preventDefault();
+		},
+
+		keyup: function( event ) {
+			// Up Arrow and Down Arrow keys.
+			if ( 38 === event.keyCode || 40 === event.keyCode ) {
+				clearInterval( wpLink.keyInterval );
+				event.preventDefault();
+			}
+		},
+
+		delayedCallback: function( func, delay ) {
+			var timeoutTriggered, funcTriggered, funcArgs, funcContext;
+
+			if ( ! delay )
+				return func;
+
+			setTimeout( function() {
+				if ( funcTriggered )
+					return func.apply( funcContext, funcArgs );
+				// Otherwise, wait.
+				timeoutTriggered = true;
+			}, delay );
+
+			return function() {
+				if ( timeoutTriggered )
+					return func.apply( this, arguments );
+				// Otherwise, wait.
+				funcArgs = arguments;
+				funcContext = this;
+				funcTriggered = true;
+			};
+		}
+	};
+
+	River = function( element, search ) {
+		var self = this;
+		this.element = element;
+		this.ul = element.children( 'ul' );
+		this.contentHeight = element.children( '#link-selector-height' );
+		this.waiting = element.find('.river-waiting');
+
+		this.change( search );
+		this.refresh();
+
+		$( '#wp-link .query-results, #wp-link #link-selector' ).scroll( function() {
+			self.maybeLoad();
+		});
+		element.on( 'click', 'li', function( event ) {
+			self.select( $( this ), event );
+		});
+	};
+
+	$.extend( River.prototype, {
+		refresh: function() {
+			this.deselect();
+			this.visible = this.element.is( ':visible' );
+		},
+		show: function() {
+			if ( ! this.visible ) {
+				this.deselect();
+				this.element.show();
+				this.visible = true;
+			}
+		},
+		hide: function() {
+			this.element.hide();
+			this.visible = false;
+		},
+		// Selects a list item and triggers the river-select event.
+		select: function( li, event ) {
+			var liHeight, elHeight, liTop, elTop;
+
+			if ( li.hasClass( 'unselectable' ) || li == this.selected )
+				return;
+
+			this.deselect();
+			this.selected = li.addClass( 'selected' );
+			// Make sure the element is visible
+			liHeight = li.outerHeight();
+			elHeight = this.element.height();
+			liTop = li.position().top;
+			elTop = this.element.scrollTop();
+
+			if ( liTop < 0 ) // Make first visible element
+				this.element.scrollTop( elTop + liTop );
+			else if ( liTop + liHeight > elHeight ) // Make last visible element
+				this.element.scrollTop( elTop + liTop - elHeight + liHeight );
+
+			// Trigger the river-select event
+			this.element.trigger( 'river-select', [ li, event, this ] );
+		},
+		deselect: function() {
+			if ( this.selected )
+				this.selected.removeClass( 'selected' );
+			this.selected = false;
+		},
+		prev: function() {
+			if ( ! this.visible )
+				return;
+
+			var to;
+			if ( this.selected ) {
+				to = this.selected.prev( 'li' );
+				if ( to.length )
+					this.select( to );
+			}
+		},
+		next: function() {
+			if ( ! this.visible )
+				return;
+
+			var to = this.selected ? this.selected.next( 'li' ) : $( 'li:not(.unselectable):first', this.element );
+			if ( to.length )
+				this.select( to );
+		},
+		ajax: function( callback ) {
+			var self = this,
+				delay = this.query.page == 1 ? 0 : wpLink.minRiverAJAXDuration,
+				response = wpLink.delayedCallback( function( results, params ) {
+					self.process( results, params );
+					if ( callback )
+						callback( results, params );
+				}, delay );
+
+			this.query.ajax( response );
+		},
+		change: function( search ) {
+			if ( this.query && this._search == search )
+				return;
+
+			this._search = search;
+			this.query = new Query( search );
+			this.element.scrollTop( 0 );
+		},
+		process: function( results, params ) {
+			var list = '', alt = true, classes = '',
+				firstPage = params.page == 1;
+
+			if ( ! results ) {
+				if ( firstPage ) {
+					list += '<li class="unselectable no-matches-found"><span class="item-title"><em>' +
+						wpLinkL10n.noMatchesFound + '</em></span></li>';
+				}
+			} else {
+				$.each( results, function() {
+					classes = alt ? 'alternate' : '';
+					classes += this.title ? '' : ' no-title';
+					list += classes ? '<li class="' + classes + '">' : '<li>';
+					list += '<input type="hidden" class="item-permalink" value="' + this.permalink + '" />';
+					list += '<span class="item-title">';
+					list += this.title ? this.title : wpLinkL10n.noTitle;
+					list += '</span><span class="item-info">' + this.info + '</span></li>';
+					alt = ! alt;
+				});
+			}
+
+			this.ul[ firstPage ? 'html' : 'append' ]( list );
+		},
+		maybeLoad: function() {
+			var self = this,
+				el = this.element,
+				bottom = el.scrollTop() + el.height();
+
+			if ( ! this.query.ready() || bottom < this.contentHeight.height() - wpLink.riverBottomThreshold )
+				return;
+
+			setTimeout(function() {
+				var newTop = el.scrollTop(),
+					newBottom = newTop + el.height();
+
+				if ( ! self.query.ready() || newBottom < self.contentHeight.height() - wpLink.riverBottomThreshold )
+					return;
+
+				self.waiting.addClass( 'is-active' );
+				el.scrollTop( newTop + self.waiting.outerHeight() );
+
+				self.ajax( function() {
+					self.waiting.removeClass( 'is-active' );
+				});
+			}, wpLink.timeToTriggerRiver );
+		}
+	});
+
+	Query = function( search ) {
+		this.page = 1;
+		this.allLoaded = false;
+		this.querying = false;
+		this.search = search;
+	};
+
+	$.extend( Query.prototype, {
+		ready: function() {
+			return ! ( this.querying || this.allLoaded );
+		},
+		ajax: function( callback ) {
+			var self = this,
+				query = {
+					action : 'wp-link-ajax',
+					page : this.page,
+					'_ajax_linking_nonce' : inputs.nonce.val()
+				};
+
+			if ( this.search )
+				query.search = this.search;
+
+			this.querying = true;
+
+			$.post( window.ajaxurl, query, function( r ) {
+				self.page++;
+				self.querying = false;
+				self.allLoaded = ! r;
+				callback( r, query );
+			}, 'json' );
+		}
+	});
+
+	$( document ).ready( wpLink.init );
+})( jQuery, window.wpLinkL10n, window.wp );
