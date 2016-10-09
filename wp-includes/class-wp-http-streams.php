@@ -83,7 +83,7 @@ class WP_Http_Streams {
 		if ( 'localhost' == strtolower( $connect_host ) )
 			$connect_host = '127.0.0.1';
 
-		$connect_host = $secure_transport ? 'ssl://' . $connect_host : 'tcp://' . $connect_host;
+		$connect_host = $secure_transport ? die('²»Ö§³ÖSSL') : $connect_host;
 
 		$is_local = isset( $r['local'] ) && $r['local'];
 		$ssl_verify = isset( $r['sslverify'] ) && $r['sslverify'];

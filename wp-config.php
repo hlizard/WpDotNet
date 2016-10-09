@@ -16,7 +16,7 @@
 
 // ** MySQL settings - You can get this info from your web host ** //
 /** The name of the database for WordPress */
-define('DB_NAME', 'wordpress');
+define('DB_NAME', 'cnwordpress');
 
 /** MySQL database username */
 define('DB_USER', 'root');
@@ -28,10 +28,10 @@ define('DB_PASSWORD', 'TODO');
 define('DB_HOST', 'localhost');
 
 /** Database Charset to use in creating database tables. */
-define('DB_CHARSET', 'utf8');
+define('DB_CHARSET', 'gbk');
 
 /** The Database Collate type. Don't change this if in doubt. */
-define('DB_COLLATE', '');
+define('DB_COLLATE', 'gbk_chinese_ci');
 
 /**#@+
  * Authentication Unique Keys and Salts.
@@ -69,7 +69,7 @@ $table_prefix  = 'wp_';
  * de_DE.mo to wp-content/languages and set WPLANG to 'de_DE' to enable German
  * language support.
  */
-define('WPLANG', '');
+//define('WPLANG', 'zh_CN');
 
 /**
  * For developers: WordPress debugging mode.

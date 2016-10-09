@@ -937,7 +937,7 @@ function _wp_specialchars( $string, $quote_style = ENT_NOQUOTES, $charset = fals
 	// Backwards compatibility
 	if ( 'single' === $_quote_style )
 		$string = str_replace( "'", '&#039;', $string );
-
+    $string = str_replace( "&amp;", '&', $string ); //temp way
 	return $string;
 }
 
