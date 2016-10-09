@@ -188,7 +188,6 @@ function twentysixteen_excerpt_more() {
 add_filter( 'excerpt_more', 'twentysixteen_excerpt_more' );
 endif;
 
-if ( ! function_exists( 'twentysixteen_categorized_blog' ) ) :
 /**
  * Determines whether blog/site has more than one category.
  *
@@ -221,7 +220,6 @@ function twentysixteen_categorized_blog() {
 		return false;
 	}
 }
-endif;
 
 /**
  * Flushes out the transients used in twentysixteen_categorized_blog().
