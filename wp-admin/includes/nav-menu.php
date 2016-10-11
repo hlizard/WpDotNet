@@ -1098,7 +1098,7 @@ function _wp_expand_nav_menu_post_data() {
 	if ( ! is_null( $data ) && $data ) {
 		foreach ( $data as $post_input_data ) {
 			// For input names that are arrays (e.g. `menu-item-db-id[3][4][5]`),
-			// derive the array path keys via regex and set the value in $_POST.
+			// derive the array path?keys via regex and set the value in $_POST.
 			preg_match( '#([^\[]*)(\[(.+)\])?#', $post_input_data->name, $matches );
 
 			$array_bits = array( $matches[1] );

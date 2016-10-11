@@ -192,7 +192,7 @@ class Requests_Transport_cURL implements Requests_Transport {
 	 * @return array Array of Requests_Response objects (may contain Requests_Exception or string responses as well)
 	 */
 	public function request_multiple($requests, $options) {
-		// If you're not requesting, we can't get any responses Â¯\_(ãƒ„)_/Â¯
+		// If you're not requesting, we can't get any responses ?\_(¥Ä)_/?
 		if (empty($requests)) {
 			return array();
 		}
