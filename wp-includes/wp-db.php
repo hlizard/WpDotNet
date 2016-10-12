@@ -2897,10 +2897,10 @@ class wpdb {
 			'length'  => false,
 		);
 
-		$data = $this->strip_invalid_text( array( $data ) );
-		if ( is_wp_error( $data ) ) {
-			return $data;
-		}
+        //$data = $this->strip_invalid_text( array( $data ) );
+        //if ( is_wp_error( $data ) ) {
+        //    return $data;
+        //}
 
 		return $data[0]['value'];
 	}
@@ -2938,10 +2938,10 @@ class wpdb {
 			)
 		);
 
-		$data = $this->strip_invalid_text( $data );
-		if ( is_wp_error( $data ) ) {
-			return $data;
-		}
+        //$data = $this->strip_invalid_text( $data );
+        //if ( is_wp_error( $data ) ) {
+        //    return $data;
+        //}
 
 		return $data[ $column ]['value'];
 	}
