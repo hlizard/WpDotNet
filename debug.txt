@@ -1,0 +1,6 @@
+1.生成时从web.config移除
+			<add assembly="WpDotNet"/>
+启动后根据网站提示加回去
+
+
+2.在vs捕获Script_DieException异常后，将其设置为不再捕获，此异常太频繁，但不致命，很干扰调试

@@ -2081,11 +2081,11 @@ class wpdb {
 			return false;
 		}
 
-		$converted_data = $this->strip_invalid_text( $data );
+        //$converted_data = $this->strip_invalid_text( $data );
 
-		if ( $data !== $converted_data ) {
-			return false;
-		}
+        //if ( $data !== $converted_data ) {
+        //    return false;
+        //}
 
 		return $data;
 	}
