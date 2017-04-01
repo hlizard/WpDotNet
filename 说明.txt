@@ -1,0 +1,5 @@
+﻿
+
+1.Phalanger编译此工程时使用Web.config中的配置，工程文件本身不用包含php源文件
+
+2.可直接在VS中启动调试（调试时遇到ScriptDiedException异常可忽略——设置不再捕获即可）
