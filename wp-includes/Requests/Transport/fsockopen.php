@@ -103,10 +103,10 @@ class Requests_Transport_fsockopen implements Requests_Transport {
 				$verifyname = false;
 			}
 
-			stream_context_set_option($context, array('ssl' => $context_options));
+			stream_context_set_option($context, array('ssl' => $context_options), NULL, NULL);
 		}
 		else {
-			$remote_socket = 'tcp://' . $host;
+			$remote_socket = $host;
 		}
 
 		$this->max_bytes = $options['max_bytes'];

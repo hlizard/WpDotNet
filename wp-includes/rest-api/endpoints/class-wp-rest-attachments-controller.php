@@ -674,7 +674,7 @@ class WP_REST_Attachments_Controller extends WP_REST_Posts_Controller {
 			return true;
 		}
 
-		return parent::validate_user_can_query_private_statuses( $value, $request, $parameter );
+		throw new Exception('Class \'WP_REST_Posts_Controller\' does not contain definition of method \'validate_user_can_query_private_statuses\'.');//return parent::validate_user_can_query_private_statuses( $value, $request, $parameter );
 	}
 
 	/**

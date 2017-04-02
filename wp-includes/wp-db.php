@@ -2147,11 +2147,11 @@ class wpdb {
 			return false;
 		}
 
-		$converted_data = $this->strip_invalid_text( $data );
+        //$converted_data = $this->strip_invalid_text( $data );
 
-		if ( $data !== $converted_data ) {
-			return false;
-		}
+        //if ( $data !== $converted_data ) {
+        //    return false;
+        //}
 
 		return $data;
 	}
@@ -2961,10 +2961,10 @@ class wpdb {
 			'length'  => false,
 		);
 
-		$data = $this->strip_invalid_text( array( $data ) );
-		if ( is_wp_error( $data ) ) {
-			return $data;
-		}
+        //$data = $this->strip_invalid_text( array( $data ) );
+        //if ( is_wp_error( $data ) ) {
+        //    return $data;
+        //}
 
 		return $data[0]['value'];
 	}
@@ -3002,10 +3002,10 @@ class wpdb {
 			)
 		);
 
-		$data = $this->strip_invalid_text( $data );
-		if ( is_wp_error( $data ) ) {
-			return $data;
-		}
+        //$data = $this->strip_invalid_text( $data );
+        //if ( is_wp_error( $data ) ) {
+        //    return $data;
+        //}
 
 		return $data[ $column ]['value'];
 	}
