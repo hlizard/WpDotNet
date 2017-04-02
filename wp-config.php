@@ -22,7 +22,7 @@ define('DB_NAME', 'cnwordpress');
 define('DB_USER', 'root');
 
 /** MySQL database password */
-define('DB_PASSWORD', 'TODO');
+define('DB_PASSWORD', 'passpass');
 
 /** MySQL hostname */
 define('DB_HOST', 'localhost');

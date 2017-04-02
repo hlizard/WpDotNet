@@ -70,7 +70,9 @@ class Requests_Transport_fsockopen implements Requests_Transport {
 		// HTTPS support
 		if (isset($url_parts['scheme']) && strtolower($url_parts['scheme']) === 'https') {
 			$remote_socket = 'ssl://' . $host;
-			$url_parts['port'] = 443;
+			if (!isset($url_parts['port'])) {
+				$url_parts['port'] = 443;
+			}
 
 			$context_options = array(
 				'verify_peer' => true,
@@ -97,13 +99,14 @@ class Requests_Transport_fsockopen implements Requests_Transport {
 			}
 
 			if (isset($options['verifyname']) && $options['verifyname'] === false) {
+				$context_options['verify_peer_name'] = false;
 				$verifyname = false;
 			}
 
-			stream_context_set_option($context, array('ssl' => $context_options), NULL, NULL);
+			stream_context_set_option($context, array('ssl' => $context_options));
 		}
 		else {
-			$remote_socket = $host;
+			$remote_socket = 'tcp://' . $host;
 		}
 
 		$this->max_bytes = $options['max_bytes'];
@@ -171,7 +174,7 @@ class Requests_Transport_fsockopen implements Requests_Transport {
 		if (!isset($case_insensitive_headers['Host'])) {
 			$out .= sprintf('Host: %s', $url_parts['host']);
 
-			if ($url_parts['port'] !== 80) {
+			if (( 'http' === strtolower($url_parts['scheme']) && $url_parts['port'] !== 80 ) || ( 'https' === strtolower($url_parts['scheme']) && $url_parts['port'] !== 443 )) {
 				$out .= ':' . $url_parts['port'];
 			}
 			$out .= "\r\n";

@@ -431,7 +431,7 @@ class getid3_id3v2 extends getid3_handler
 				$thisfile_id3v2['minorversion_footer'] = ord($footer{4});
 			}
 			if ($thisfile_id3v2['majorversion_footer'] <= 4) {
-				$id3_flags = ord(substr($footer{5}, NULL, NULL));
+				$id3_flags = ord(substr($footer{5}));
 				$thisfile_id3v2_flags['unsynch_footer']  = (bool) ($id3_flags & 0x80);
 				$thisfile_id3v2_flags['extfoot_footer']  = (bool) ($id3_flags & 0x40);
 				$thisfile_id3v2_flags['experim_footer']  = (bool) ($id3_flags & 0x20);
