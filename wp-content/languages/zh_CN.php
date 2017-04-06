@@ -114,7 +114,7 @@ wp_embed_register_handler( 'youku',
 function zh_cn_l10n_settings_init() {
 	if ( defined( 'WP_ZH_CN_ICP_NUM' ) && WP_ZH_CN_ICP_NUM ) {
 		add_settings_field( 'zh_cn_l10n_icp_num',
-			'ICP±¸°¸ºÅ',
+			'ICPå¤‡æ¡ˆå·',
 			'zh_cn_l10n_icp_num_callback',
 			'general' );
 		register_setting( 'general', 'zh_cn_l10n_icp_num' );
@@ -128,14 +128,14 @@ function zh_cn_l10n_icp_num_callback() {
 		'id="zh_cn_l10n_icp_num" value="' .
 		esc_attr( get_option( 'zh_cn_l10n_icp_num' ) ) .
 		'" class="regluar-text ltr" />' .
-		'<p class="description">½ö¶ÔWordPress×Ô´øÖ÷ÌâÓÐÐ§¡£</p>';
+		'<p class="description">ä»…å¯¹WordPressè‡ªå¸¦ä¸»é¢˜æœ‰æ•ˆã€‚</p>';
 }
 
 function zh_cn_l10n_icp_num( $content ) {
 	if ( defined( 'WP_ZH_CN_ICP_NUM' ) && WP_ZH_CN_ICP_NUM &&
 			get_option( 'zh_cn_l10n_icp_num' ) ) {
 		echo '<a href="http://www.miitbeian.gov.cn/" rel="nofollow" ' .
-			'title="¹¤ÒµºÍÐÅÏ¢»¯²¿ICP/IPµØÖ·/ÓòÃûÐÅÏ¢±¸°¸¹ÜÀíÏµÍ³">' .
+			'title="å·¥ä¸šå’Œä¿¡æ¯åŒ–éƒ¨ICP/IPåœ°å€/åŸŸåä¿¡æ¯å¤‡æ¡ˆç®¡ç†ç³»ç»Ÿ">' .
 			esc_attr( get_option( 'zh_cn_l10n_icp_num' ) ) .
 			 "</a>\n";
 	}
