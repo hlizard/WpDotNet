@@ -3,6 +3,8 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
 Project("{A0786B88-2ADB-4C21-ABE8-AA2D79766269}") = "wpweb", "wpweb.phpproj", "{E67E0A24-7B81-47B1-B4DA-D1B26851027E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WpDotNet", "wp-content\dev\wpdotnet\WpDotNet.csproj", "{45FB37E7-ADD5-4BB3-903A-66B2805545E8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -13,6 +15,10 @@ Global
 		{E67E0A24-7B81-47B1-B4DA-D1B26851027E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E67E0A24-7B81-47B1-B4DA-D1B26851027E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E67E0A24-7B81-47B1-B4DA-D1B26851027E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{45FB37E7-ADD5-4BB3-903A-66B2805545E8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{45FB37E7-ADD5-4BB3-903A-66B2805545E8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{45FB37E7-ADD5-4BB3-903A-66B2805545E8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{45FB37E7-ADD5-4BB3-903A-66B2805545E8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

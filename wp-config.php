@@ -14,6 +14,11 @@
  * @package WordPress
  */
 
+$home = 'http://'.$_SERVER['HTTP_HOST'].'/wordpress'; #��ȡ��ǰ���ʵ�����
+$siteurl = 'http://'.$_SERVER['HTTP_HOST'].'/wordpress';
+define('WP_HOME', $home);
+define('WP_SITEURL', $siteurl);
+
 // ** MySQL settings - You can get this info from your web host ** //
 /** The name of the database for WordPress */
 define('DB_NAME', 'cnwordpress');

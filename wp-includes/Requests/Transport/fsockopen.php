@@ -57,7 +57,10 @@ class Requests_Transport_fsockopen implements Requests_Transport {
 	 */
 	public function request($url, $headers = array(), $data = array(), $options = array()) {
 		$options['hooks']->dispatch('fsockopen.before_request');
-
+        
+		//header("Content-type: text/html; charset=utf-8");
+		//echo '系统出错'.'|'.$url; exit();
+        return NULL;    //临时解决部署到linux mono 4.8 xsp下此方法抛System.ArgumentOutOfRangeException异常问题
 		$url_parts = parse_url($url);
 		if (empty($url_parts)) {
 			throw new Requests_Exception('Invalid URL.', 'invalidurl', $url);

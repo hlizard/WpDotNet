@@ -108,14 +108,14 @@ namespace Devsense.WordPress.Plugins.WpDotNet
         {
             dynamic wp = context.Globals;
 
-            wp.add_action( "wp_dashboard_setup", new Action(() => {
+            //wp.add_action( "wp_dashboard_setup", new Action(() => {
             
-                wp.remove_meta_box( "dashboard_primary", "dashboard", "side" );
-	            wp.remove_meta_box( "dashboard_secondary", "dashboard", "side" );
-	            wp.remove_meta_box( "dashboard_plugins", "dashboard", "normal" );
-	            wp.remove_meta_box( "dashboard_incoming_links", "dashboard", "normal" );
+            //    wp.remove_meta_box( "dashboard_primary", "dashboard", "side" );
+            //    wp.remove_meta_box( "dashboard_secondary", "dashboard", "side" );
+            //    wp.remove_meta_box( "dashboard_plugins", "dashboard", "normal" );
+            //    wp.remove_meta_box( "dashboard_incoming_links", "dashboard", "normal" );
 
-            }));
+            //}));
 
         }
 
