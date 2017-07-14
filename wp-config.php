@@ -14,7 +14,7 @@
  * @package WordPress
  */
 
-$home = 'http://'.$_SERVER['HTTP_HOST'].'/wordpress'; #ï¿½ï¿½È¡ï¿½ï¿½Ç°ï¿½ï¿½ï¿½Êµï¿½ï¿½ï¿½ï¿½ï¿½
+$home = 'http://'.$_SERVER['HTTP_HOST'].'/wordpress'; #»ñÈ¡µ±Ç°·ÃÎÊµÄÓòÃû
 $siteurl = 'http://'.$_SERVER['HTTP_HOST'].'/wordpress';
 define('WP_HOME', $home);
 define('WP_SITEURL', $siteurl);
@@ -24,13 +24,13 @@ define('WP_SITEURL', $siteurl);
 define('DB_NAME', 'cnwordpress');
 
 /** MySQL database username */
-define('DB_USER', 'root');
+define('DB_USER', 'cdb_outerroot');
 
 /** MySQL database password */
 define('DB_PASSWORD', 'passpass');
 
 /** MySQL hostname */
-define('DB_HOST', 'localhost');
+define('DB_HOST', '58e45f925940a.gz.cdb.myqcloud.com:3354'); //define('DB_HOST', '10.66.210.172');
 
 /** Database Charset to use in creating database tables. */
 define('DB_CHARSET', 'utf8');
