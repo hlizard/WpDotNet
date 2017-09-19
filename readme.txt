@@ -5,8 +5,8 @@ This package contains actual source code of WordPress and Phalanger - the PHP co
 WP.NET is fully managed ASP.NET application capabable of running 64bit under Windows or Linux.
 
 System Requirements:
- - ASP.NET 4.0 or Mono 2.10.8 or higher
- - IIS 7.0 or Apache
+ - ASP.NET 4.0 or Mono 4.x
+ - IIS 7.0 or Apache or Jexus
  - MySql 5.0 or higher
 
 System Recommandation:
@@ -19,16 +19,8 @@ IIS Instalation recommandation:
  - just access localhost/wordpress and folow traditional 5-minut installation of WordPress
 
 
-Automatic Update of Phalanger
- - WP.NET contains plugins that recognize when new Phalanger is available and installs it on your system
-
-
 Web.config
  - as ASP.NET application it needs to contain web.config where are necessary configuration for .NET and Phalanger
-
-
-Support:
- - if you have any question or suggestion feel free to contact us at http://support.devsense.com 
 
 
 License:
